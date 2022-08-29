@@ -1,22 +1,30 @@
 package com.example.core1_ivansoohoo
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
 
 class MainActivity : AppCompatActivity() {
-    var _score: Int = 0;
+    var _score: Int = 0
+    var mediaPlayer:MediaPlayer? = null
 
+
+    // no need to call prepare(); create() does that for you
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val score = findViewById<Button>(R.id.Score)
         val steal = findViewById<Button>(R.id.Steal)
         val Reset = findViewById<Button>(R.id.Reset)
         val result = findViewById<TextView>(R.id.Result)
+
         savedInstanceState?.let {
             _score = it.getInt("SCORE")
             result.text = _score.toString()
@@ -24,8 +32,11 @@ class MainActivity : AppCompatActivity() {
 
 
         score.setOnClickListener(){
+
             if(_score in 0 .. 14){
                 _score = Add()
+                click()
+
                 if(_score in 0..4){
                     result.setTextColor(Color.BLACK)
                 }
@@ -75,11 +86,33 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+
     }
+
+
 
     private fun Add() = _score + 1
     private fun Steal() = _score - 1
     private fun reset() = _score - _score
+
+    private fun click()
+    {
+        if(mediaPlayer == null){
+            mediaPlayer = MediaPlayer.create(this, R.raw.click)
+            mediaPlayer!!.isLooping = true
+            mediaPlayer!!.start()
+        }else{
+            mediaPlayer!!.start()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if(mediaPlayer != null){
+            mediaPlayer!!.release()
+            mediaPlayer = null
+        }
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
