@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="score">Skor</string>
+    <string name="steal">Curi</string>
+    <string name="reset">Semula</string>
+</resources>

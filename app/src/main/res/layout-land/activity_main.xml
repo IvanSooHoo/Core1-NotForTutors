@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_weight="0"
-        android:text="Score" />
+        android:text="@string/score" />
     <View
         android:layout_width="0dp"
         android:layout_height="10dp"
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|end"
-        android:text="Steal" />
+        android:text="@string/steal" />
 
     <TextView
         android:id="@+id/Result"
@@ -41,7 +41,7 @@
         android:layout_gravity="right"
 
 
-        android:text="Reset" />
+        android:text="@string/reset" />
 
     <View
         android:layout_width="0dp"
