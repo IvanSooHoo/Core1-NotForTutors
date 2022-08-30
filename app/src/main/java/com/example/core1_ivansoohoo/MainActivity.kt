@@ -12,8 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     var _score: Int = 0
-    var mediaPlayer:MediaPlayer? = null
-
+    lateinit var mediaPlayer: MediaPlayer
 
     // no need to call prepare(); create() does that for you
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,18 +23,19 @@ class MainActivity : AppCompatActivity() {
         val steal = findViewById<Button>(R.id.Steal)
         val Reset = findViewById<Button>(R.id.Reset)
         val result = findViewById<TextView>(R.id.Result)
-
+        mediaPlayer = MediaPlayer.create(applicationContext,R.raw.battle_crowd_celebration)
+       // mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        Log.i("LIFECYCLE","MediaPlayer Successfully Created $mediaPlayer")
         savedInstanceState?.let {
             _score = it.getInt("SCORE")
             result.text = _score.toString()
         }
 
-
         score.setOnClickListener(){
 
             if(_score in 0 .. 14){
                 _score = Add()
-                click()
+                Log.i("LIFECYCLE","MediaPlayer is still $mediaPlayer")
 
                 if(_score in 0..4){
                     result.setTextColor(Color.BLACK)
@@ -45,6 +45,13 @@ class MainActivity : AppCompatActivity() {
                 }
                 if(_score in 10..15){
                     result.setTextColor(Color.BLUE)
+                }
+                if(_score == 15){
+                    mediaPlayer.seekTo(0)
+                    mediaPlayer.setVolume(10F, 20F)
+                    mediaPlayer.start()
+                    Log.i("LIFECYCLE"," IS IT PLAYING? ${mediaPlayer.isPlaying}")
+                    Log.i("LIFECYCLE","The media has played successfully")
                 }
 
             }
@@ -72,7 +79,10 @@ class MainActivity : AppCompatActivity() {
         Reset.setOnClickListener()
         {
             _score = reset()
-            result.text = _score.toString()
+            mediaPlayer.stop()
+            mediaPlayer.prepare()
+            Log.i("LIFECYCLE","IS MEDIAPLAYER PLAYING? : ${mediaPlayer.isPlaying}")
+
             if(_score in 0..4){
                 result.setTextColor(Color.BLACK)
             }
@@ -82,9 +92,8 @@ class MainActivity : AppCompatActivity() {
             if(_score in 10..15){
                 result.setTextColor(Color.BLUE)
             }
-
+            result.text = _score.toString()
         }
-
 
 
     }
@@ -95,22 +104,11 @@ class MainActivity : AppCompatActivity() {
     private fun Steal() = _score - 1
     private fun reset() = _score - _score
 
-    private fun click()
-    {
-        if(mediaPlayer == null){
-            mediaPlayer = MediaPlayer.create(this, R.raw.click)
-            mediaPlayer!!.isLooping = true
-            mediaPlayer!!.start()
-        }else{
-            mediaPlayer!!.start()
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         if(mediaPlayer != null){
-            mediaPlayer!!.release()
-            mediaPlayer = null
+            mediaPlayer.release()
+            Log.i("LIFECYCLE","$mediaPlayer is successfully destroyed")
         }
     }
 
